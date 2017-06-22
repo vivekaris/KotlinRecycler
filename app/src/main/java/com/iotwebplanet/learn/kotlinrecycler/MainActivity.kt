@@ -14,7 +14,7 @@ import com.ohmerhe.kolley.request.Http
 import java.nio.charset.Charset
 import com.iotwebplanet.learn.kotlinrecycler.R.id.spinner
 import android.widget.ArrayAdapter
-
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -57,9 +57,8 @@ val purl="http://192.168.1.2/ApnaScore/all_data.php"
       ]
          */
         //crating an arraylist to store users using the data class user
-        val users = ArrayList<User>()
 
-        var students=ArrayList<Hostel>()
+        var hostels=ArrayList<Hostel>()
 
          Http.get {
                        url=purl
@@ -78,9 +77,11 @@ val purl="http://192.168.1.2/ApnaScore/all_data.php"
                          onSuccess { bytes ->
                            //  Log.d(tag.toString(),"on success ${bytes.toString(Charset.defaultCharset())}")
                              val text =bytes.toString(Charset.defaultCharset())
-                             println(text);
-                             val list1 = gson.fromJson<ArrayList<Hostel>>(text)
-                             students = gson.fromJson<List<Hostel>>(text) as ArrayList<Hostel>
+                             println(text)
+                             Toast.makeText(applicationContext, "Loading...data..", Toast.LENGTH_LONG).show();
+
+                             hostels = gson.fromJson<ArrayList<Hostel>>(text)
+                          //   hostels = gson.fromJson<List<Hostel>>(text) as ArrayList<Hostel>
 
                              /*
                              val s=list1.size;
@@ -102,10 +103,8 @@ val purl="http://192.168.1.2/ApnaScore/all_data.php"
                              }
 
                            */
-                             //creating our adapter
-                             //val adapter = CustomAdapter(users)
-
-                              val adapter = MyAdapter(list1)
+                             //creating our adapter  all data will be set
+                              val adapter = MyAdapter(hostels)
 
                              //now adding the adapter to recyclerview
                              recyclerView.adapter = adapter
@@ -115,19 +114,19 @@ val purl="http://192.168.1.2/ApnaScore/all_data.php"
 
                          onFail { error ->
                              Log.d(tag.toString(),"on fail ${error.toString()}")
+                             Toast.makeText(applicationContext, "E:"+error.toString(), Toast.LENGTH_LONG).show();
+
                          }
 
                          onFinish { Log.d(tag.toString(), "on finish")
-                            // val adapter = MyAdapter(students)
+                             Toast.makeText(applicationContext, "Finished", Toast.LENGTH_LONG).show();
+
                          }
 
                      }
 
         //adding some dummy data to the list
-        users.add(User("Belal Khan", "Ranchi Jharkhand"))
-      //  users.add(User("Ramiz Khan", "Ranchi Jharkhand"))
-       // users.add(User("Faiz Khan", "Ranchi Jharkhand"))
-       // users.add(User("Yashar Khan", "Ranchi Jharkhand"))
+
 
 
     }
